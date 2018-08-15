@@ -2,7 +2,7 @@
 // modifications and pruning. It is licensed under MIT:
 //
 // Copyright 2015-2016 Chen, Yi-Cyuan
-//  
+//
 // Permission is hereby granted, free of charge, to any person obtaining
 // a copy of this software and associated documentation files (the
 // "Software"), to deal in the Software without restriction, including
@@ -10,10 +10,10 @@
 // distribute, sublicense, and/or sell copies of the Software, and to
 // permit persons to whom the Software is furnished to do so, subject to
 // the following conditions:
-// 
+//
 // The above copyright notice and this permission notice shall be
 // included in all copies or substantial portions of the Software.
-// 
+//
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -26,20 +26,64 @@ const HEX_CHARS = '0123456789abcdef'.split('');
 const KECCAK_PADDING = [1, 256, 65536, 16777216];
 const SHIFT = [0, 8, 16, 24];
 const RC = [
-  1, 0, 32898, 0, 32906, 2147483648, 2147516416, 2147483648, 32907, 0, 2147483649,
-  0, 2147516545, 2147483648, 32777, 2147483648, 138, 0, 136, 0, 2147516425, 0,
-  2147483658, 0, 2147516555, 0, 139, 2147483648, 32905, 2147483648, 32771,
-  2147483648, 32770, 2147483648, 128, 2147483648, 32778, 0, 2147483658, 2147483648,
-  2147516545, 2147483648, 32896, 2147483648, 2147483649, 0, 2147516424, 2147483648];
+  1,
+  0,
+  32898,
+  0,
+  32906,
+  2147483648,
+  2147516416,
+  2147483648,
+  32907,
+  0,
+  2147483649,
+  0,
+  2147516545,
+  2147483648,
+  32777,
+  2147483648,
+  138,
+  0,
+  136,
+  0,
+  2147516425,
+  0,
+  2147483658,
+  0,
+  2147516555,
+  0,
+  139,
+  2147483648,
+  32905,
+  2147483648,
+  32771,
+  2147483648,
+  32770,
+  2147483648,
+  128,
+  2147483648,
+  32778,
+  0,
+  2147483658,
+  2147483648,
+  2147516545,
+  2147483648,
+  32896,
+  2147483648,
+  2147483649,
+  0,
+  2147516424,
+  2147483648
+];
 
-const Keccak = (bits) => ({
+const Keccak = bits => ({
   blocks: [],
   reset: true,
   block: 0,
   start: 0,
   blockCount: (1600 - (bits << 1)) >> 5,
   outputBlocks: bits >> 5,
-  s: (s=>[].concat(s,s,s,s,s))([0,0,0,0,0,0,0,0,0,0])
+  s: (s => [].concat(s, s, s, s, s))([0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
 });
 
 const update = (state, message) => {
@@ -62,7 +106,7 @@ const update = (state, message) => {
         blocks[i] = 0;
       }
     }
-    if (typeof message !== "string") {
+    if (typeof message !== 'string') {
       for (i = state.start; index < length && i < byteCount; ++index) {
         blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
       }
@@ -79,7 +123,9 @@ const update = (state, message) => {
           blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
           blocks[i >> 2] |= (0x80 | (code & 0x3f)) << SHIFT[i++ & 3];
         } else {
-          code = 0x10000 + (((code & 0x3ff) << 10) | (message.charCodeAt(++index) & 0x3ff));
+          code =
+            0x10000 +
+            (((code & 0x3ff) << 10) | (message.charCodeAt(++index) & 0x3ff));
           blocks[i >> 2] |= (0xf0 | (code >> 18)) << SHIFT[i++ & 3];
           blocks[i >> 2] |= (0x80 | ((code >> 12) & 0x3f)) << SHIFT[i++ & 3];
           blocks[i >> 2] |= (0x80 | ((code >> 6) & 0x3f)) << SHIFT[i++ & 3];
@@ -117,28 +163,95 @@ const update = (state, message) => {
   f(s);
 
   // toString
-  var hex = '', i = 0, j = 0, block;
+  var hex = '',
+    i = 0,
+    j = 0,
+    block;
   while (j < outputBlocks) {
     for (i = 0; i < blockCount && j < outputBlocks; ++i, ++j) {
       block = s[i];
-      hex += HEX_CHARS[(block >> 4) & 0x0F] + HEX_CHARS[block & 0x0F] +
-              HEX_CHARS[(block >> 12) & 0x0F] + HEX_CHARS[(block >> 8) & 0x0F] +
-              HEX_CHARS[(block >> 20) & 0x0F] + HEX_CHARS[(block >> 16) & 0x0F] +
-              HEX_CHARS[(block >> 28) & 0x0F] + HEX_CHARS[(block >> 24) & 0x0F];
+      hex +=
+        HEX_CHARS[(block >> 4) & 0x0f] +
+        HEX_CHARS[block & 0x0f] +
+        HEX_CHARS[(block >> 12) & 0x0f] +
+        HEX_CHARS[(block >> 8) & 0x0f] +
+        HEX_CHARS[(block >> 20) & 0x0f] +
+        HEX_CHARS[(block >> 16) & 0x0f] +
+        HEX_CHARS[(block >> 28) & 0x0f] +
+        HEX_CHARS[(block >> 24) & 0x0f];
     }
     if (j % blockCount === 0) {
       f(s);
       i = 0;
     }
   }
-  return "0x" + hex;
-}
+  return '0x' + hex;
+};
 
 const f = s => {
-  var h, l, n, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9,
-      b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17,
-      b18, b19, b20, b21, b22, b23, b24, b25, b26, b27, b28, b29, b30, b31, b32, b33,
-      b34, b35, b36, b37, b38, b39, b40, b41, b42, b43, b44, b45, b46, b47, b48, b49;
+  var h,
+    l,
+    n,
+    c0,
+    c1,
+    c2,
+    c3,
+    c4,
+    c5,
+    c6,
+    c7,
+    c8,
+    c9,
+    b0,
+    b1,
+    b2,
+    b3,
+    b4,
+    b5,
+    b6,
+    b7,
+    b8,
+    b9,
+    b10,
+    b11,
+    b12,
+    b13,
+    b14,
+    b15,
+    b16,
+    b17,
+    b18,
+    b19,
+    b20,
+    b21,
+    b22,
+    b23,
+    b24,
+    b25,
+    b26,
+    b27,
+    b28,
+    b29,
+    b30,
+    b31,
+    b32,
+    b33,
+    b34,
+    b35,
+    b36,
+    b37,
+    b38,
+    b39,
+    b40,
+    b41,
+    b42,
+    b43,
+    b44,
+    b45,
+    b46,
+    b47,
+    b48,
+    b49;
 
   for (n = 0; n < 48; n += 2) {
     c0 = s[0] ^ s[10] ^ s[20] ^ s[30] ^ s[40];
@@ -318,23 +431,23 @@ const f = s => {
     s[0] ^= RC[n];
     s[1] ^= RC[n + 1];
   }
-}
+};
 
 const keccak = bits => str => {
   var msg;
-  if (str.slice(0,2) === "0x") {
+  if (str.slice(0, 2) === '0x') {
     msg = [];
     for (var i = 2, l = str.length; i < l; i += 2)
-      msg.push(parseInt(str.slice(i,i+2), 16));
+      msg.push(parseInt(str.slice(i, i + 2), 16));
   } else {
     msg = str;
   }
   return update(Keccak(bits, bits), msg);
-}
+};
 
-module.exports = {
+export default {
   keccak256: keccak(256),
   keccak512: keccak(512),
   keccak256s: keccak(256),
-  keccak512s: keccak(512),
-}
+  keccak512s: keccak(512)
+};

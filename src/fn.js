@@ -3,8 +3,8 @@ const times = (n, f, x) => {
     x = f(x);
   }
   return x;
-}
+};
 
-module.exports = {
+export default {
   times
-}
+};
