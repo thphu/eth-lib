@@ -155,7 +155,7 @@ const toString = bytes => {
   return s;
 };
 
-export default {
+export {
   random,
   length,
   concat,

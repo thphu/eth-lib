@@ -57,7 +57,4 @@ const methodData = (method, params) => {
   return Bytes.flatten([methodHash, headBlock, dataBlock]);
 };
 
-export default {
-  encode,
-  methodData
-};
+export { encode, methodData };

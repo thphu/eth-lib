@@ -79,7 +79,7 @@ const recover = (hash, signature) => {
   return address;
 };
 
-export default {
+export {
   create,
   toChecksum,
   fromPrivate,

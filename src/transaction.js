@@ -86,9 +86,4 @@ const recover = rawTransaction => {
   return Account.recover(keccak256(dataHex), signature);
 };
 
-export default {
-  addDefaults,
-  signingData,
-  sign,
-  recover
-};
+export { addDefaults, signingData, sign, recover };

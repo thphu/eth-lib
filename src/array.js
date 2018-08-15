@@ -21,10 +21,4 @@ const chunksOf = (n, a) => {
   return b;
 };
 
-export default {
-  generate,
-  replicate,
-  concat,
-  flatten,
-  chunksOf
-};
+export { generate, replicate, concat, flatten, chunksOf };
